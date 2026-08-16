@@ -1,5 +1,5 @@
 class DIContainer {
-  dependencies: Map<string, string> = new Map();
+  dependencies: Map<string, Function> = new Map();
 
   constructor() {}
 
