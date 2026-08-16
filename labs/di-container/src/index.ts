@@ -1,14 +1,16 @@
 class DIContainer {
-  dependencies: any = new Map();
+  dependencies: Map<string, string> = new Map();
 
   constructor() {}
 
   register(dependency: any) {
-    this.dependencies.set(dependency.constructor.name, dependency);
+    this.dependencies.set(dependency.name, dependency);
   }
 
   inject(token: string) {
-    return this.dependencies.get(token);
+    const reference: any = this.dependencies.get(token);
+    const instance = new reference();
+    return instance;
   }
 }
 
@@ -35,12 +37,8 @@ class UserService {
 
 const container = new DIContainer();
 
-const userRepository = new UserRepository();
+container.register(UserRepository);
 
-container.register(userRepository);
-
-const userService = new UserService(
-  container.inject(userRepository.constructor.name),
-);
+const userService = new UserService(container.inject(UserRepository.name));
 
 userService.printUserName();
